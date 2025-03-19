@@ -14,27 +14,32 @@ public class Ch12 : MonoBehaviour
         goblin.Attack();
     }
 }
-public class Entitiy
+public abstract class Entitiy //추상화:자식 클래스에서 구현시켜야 하는 메소드를 만드는것
 {
-    public virtual void Attack()
+    protected int damage;
+    protected int currentHP;
+    public abstract void Attack(Entitiy target); //추상 메소드:호출시 하는 행동을 자식클래스에서 정의해야함->강제성
+    public void TakeDamage(int damage)
     {
-        Debug.Log("적을 공격한다"); //메소드 오버라이딩 부모클래스에서 virtual로 메소드 정의
+        if (currentHP > damage) 
+        {
+            currentHP -= damage; 
+        }
+        else { Debug.Log("DIE"); }
     }
 }
 
 public class Goblin : Entitiy
 {
-    public override void Attack() //자식 클래스에서 override로 메소드를 다시 정의(private로 정의된 메소드는 오버라이딩 불가)
+    public Goblin(int damage, int hp)
+    {
+        base.damage = damage;
+        currentHP = hp;
+    }
+    public override void Attack(Entitiy target) //자식 클래스에서 override로 추상 메소드를 다시 정의
     {
         Debug.Log("고블린 공격!");
-    }
-
-}
-public class Slime : Entitiy
-{
-    public override void Attack()
-    {
-        Debug.Log("슬라임 공격");
+        target.TakeDamage(damage);
     }
 
 }
